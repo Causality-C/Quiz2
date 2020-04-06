@@ -32,7 +32,6 @@ int* generateDPTable(int * table, int LEN, int N){
     //Populate Table O(N*LEN)
     for(int i = 1; i<=LEN; i++){
         int val = table[i-1];
-        //printf("%d\n",val);
         for(int j = 1; j<= N; j++){
             if(j == val){
                 dpTable[i][j] = 1;
@@ -45,12 +44,14 @@ int* generateDPTable(int * table, int LEN, int N){
             }
         }
     }
-    //Freeing all but return row
+    //Freeing all but return value (which is a row)
+    int * ret = dpTable[LEN];
     for(int i= 0; i<LEN; i++){
         free(dpTable[i]);
     }
     free(dpTable);
-    return dpTable[LEN];
+    
+    return ret;
 }
 
 /*
@@ -74,6 +75,9 @@ int arraySum(int * table, int N){
     }
     return sum;
 }
+/*
+* Print an Array given its length
+*/
 void printArray(int * arr, int N){
     printf("Printing Array\n");
     for(int i = 0; i< N; i++){
@@ -88,9 +92,12 @@ int main(void){
     printArray(array,N);
     int sum = arraySum(array, N);
     int *answers = generateDPTable(array,N,sum);
+    //1 denotes that the sum is possible. 0 denotes that sum is impossible. 
     for(int i = 0; i<= sum; i++){
         printf("Is the Sum %d Possible : %d\n", i, querySubset(answers, i,sum));
     }
+    //Outliers: Sums that are out of range 
     printf("Is the Sum %d Possible : %d\n", 100000, querySubset(answers, 100000,sum));
+    printf("Is the Sum %d Possible : %d\n", -1, querySubset(answers, -1,sum));
     free(answers);
 }
